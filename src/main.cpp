@@ -11,8 +11,13 @@ void setup(){
 
     setupWebserver();
     setupPins();
+
+    ledTest();
 }
 
 void loop(){
-    handleQuestion(question);
+    for (int i = 1; i < 6; i++){
+        handleQuestion(i);
+        delay(1000);
+    }
 }
