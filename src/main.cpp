@@ -4,6 +4,8 @@
 #include "pins.h"
 #include "functions.h"
 
+int question = 1;
+
 void setup(){
     Serial.begin(115200); //Start Serial-Monitor for debugging
 
@@ -12,5 +14,5 @@ void setup(){
 }
 
 void loop(){
-    
+    handleQuestion(question);
 }
