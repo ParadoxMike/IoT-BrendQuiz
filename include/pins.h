@@ -1,7 +1,7 @@
 #include <Arduino.h>
 #include <Bounce2.h>
 
-#define debounceTime 20
+#define debounceTime 10
 
 //LED-bus
 #define LED_data_1 23
@@ -11,11 +11,11 @@
 
 //button-bus
 #define button_pin_A 27
-Bounce debouncedButtonA = Bounce();
+Bounce debouncedButtonA = Bounce(button_pin_A, debounceTime);
 #define button_pin_B 14
-Bounce debouncedButtonB = Bounce();
+Bounce debouncedButtonB = Bounce(button_pin_B, debounceTime);
 #define button_pin_C 12
-Bounce debouncedButtonC = Bounce();
+Bounce debouncedButtonC = Bounce(button_pin_C, debounceTime);
 
 //qeustion-select
 #define question_1 2
@@ -26,9 +26,9 @@ Bounce debouncedButtonC = Bounce();
 
 //nav-buttons
 #define start_next_button_pin 25
-Bounce startNextButton = Bounce();
+Bounce startNextButton = Bounce(start_next_button_pin, debounceTime);
 #define previous_button_pin 26
-Bounce previousButton = Bounce();
+Bounce previousButton = Bounce(previous_button_pin, debounceTime);
 
 //other
 #define mosfet_pin 33
@@ -45,38 +45,31 @@ void setupPins(){
     digitalWrite(LED_data_4, LOW);
 
     pinMode(button_pin_A, INPUT_PULLDOWN);
-    debouncedButtonA.attach(button_pin_A);
-    debouncedButtonA.interval(debounceTime);
     pinMode(button_pin_B, INPUT_PULLDOWN);
-    debouncedButtonB.attach(button_pin_B);
-    debouncedButtonB.interval(debounceTime);
     pinMode(button_pin_C, INPUT_PULLDOWN);
-    debouncedButtonC.attach(button_pin_C);
-    debouncedButtonC.interval(debounceTime);
 
     pinMode(question_1, OUTPUT);
-    digitalWrite(question_1, HIGH);
     digitalWrite(question_1, LOW);
     pinMode(question_2, OUTPUT);
-    digitalWrite(question_2, HIGH);
     digitalWrite(question_2, LOW);
     pinMode(question_3, OUTPUT);
-    digitalWrite(question_3, HIGH);
     digitalWrite(question_3, LOW);
     pinMode(question_4, OUTPUT);
-    digitalWrite(question_4, HIGH);
     digitalWrite(question_4, LOW);
     pinMode(question_5, OUTPUT);
-    digitalWrite(question_5, HIGH);
     digitalWrite(question_5, LOW);
 
     pinMode(start_next_button_pin, INPUT_PULLDOWN);
-    startNextButton.attach(start_next_button_pin);
-    startNextButton.interval(debounceTime);
     pinMode(previous_button_pin, INPUT_PULLDOWN);
-    previousButton.attach(previous_button_pin);
-    previousButton.interval(debounceTime);
 
     pinMode(mosfet_pin, OUTPUT);
     digitalWrite(mosfet_pin, LOW);
+}
+
+void updateAllButtons(){
+    debouncedButtonA.update();
+    debouncedButtonB.update();
+    debouncedButtonC.update();
+    startNextButton.update();
+    previousButton.update();
 }

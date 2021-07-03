@@ -3,12 +3,12 @@
 
 //updates the given button and returns true if transitioned from low to high
 bool buttonPressed(Bounce button){
-    button.update();
-    if (button.rose())
-        return true;
-    else
-        return false;
-    
+    if(button.update()){
+        if (button.rose())
+            return true;
+        else
+            return false;
+    } 
 }
 
 void updateQuestion(int question_num){
