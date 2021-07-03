@@ -4,7 +4,7 @@
 #include <SPIFFS.h>
 
 // SSID & Password
-const char *ssid = "Quiz am Brend"; // Enter your SSID here
+const char *ssid = "Quiz am Brend - PDF Download"; // Enter your SSID here
 const char *password = NULL;            //Can also be a string with a password
 
 // Use this IP adress after connecting to the AP
