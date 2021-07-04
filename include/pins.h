@@ -2,6 +2,7 @@
 #include <Bounce2.h>
 
 #define debounceTime 10
+#define adc_on_level 100
 
 //LED-bus
 #define LED_data_1 23
@@ -10,12 +11,9 @@
 #define LED_data_4 5
 
 //button-bus
-#define button_pin_A 27
-Bounce debouncedButtonA = Bounce(button_pin_A, debounceTime);
-#define button_pin_B 14
-Bounce debouncedButtonB = Bounce(button_pin_B, debounceTime);
-#define button_pin_C 12
-Bounce debouncedButtonC = Bounce(button_pin_C, debounceTime);
+#define button_pin_A 34
+#define button_pin_B 35
+#define button_pin_C 32
 
 //qeustion-select
 #define question_1 2
@@ -25,9 +23,9 @@ Bounce debouncedButtonC = Bounce(button_pin_C, debounceTime);
 #define question_5 17
 
 //nav-buttons
-#define start_next_button_pin 25
+#define start_next_button_pin 26
 Bounce startNextButton = Bounce(start_next_button_pin, debounceTime);
-#define previous_button_pin 26
+#define previous_button_pin 25
 Bounce previousButton = Bounce(previous_button_pin, debounceTime);
 
 //other
@@ -44,9 +42,9 @@ void setupPins(){
     pinMode(LED_data_4, OUTPUT);
     digitalWrite(LED_data_4, LOW);
 
-    pinMode(button_pin_A, INPUT_PULLDOWN);
-    pinMode(button_pin_B, INPUT_PULLDOWN);
-    pinMode(button_pin_C, INPUT_PULLDOWN);
+    pinMode(button_pin_A, INPUT);
+    pinMode(button_pin_B, INPUT);
+    pinMode(button_pin_C, INPUT);
 
     pinMode(question_1, OUTPUT);
     digitalWrite(question_1, LOW);
@@ -64,12 +62,4 @@ void setupPins(){
 
     pinMode(mosfet_pin, OUTPUT);
     digitalWrite(mosfet_pin, LOW);
-}
-
-void updateAllButtons(){
-    debouncedButtonA.update();
-    debouncedButtonB.update();
-    debouncedButtonC.update();
-    startNextButton.update();
-    previousButton.update();
 }

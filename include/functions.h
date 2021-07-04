@@ -1,15 +1,4 @@
 #include <Arduino.h>
-#include <Bounce2.h>
-
-//updates the given button and returns true if transitioned from low to high
-bool buttonPressed(Bounce button){
-    if(button.update()){
-        if (button.rose())
-            return true;
-        else
-            return false;
-    } 
-}
 
 void updateQuestion(int question_num){
     switch (question_num)
@@ -137,72 +126,89 @@ void updateAllQuestion(){
     }
 }
 
-void setQuestion(int question_num){
+void setLedBus(int question_num, bool active, bool saved_answer[5][3]){
+    if(saved_answer[question_num-1][0])
+        digitalWrite(LED_data_1, HIGH);
+    else
+        digitalWrite(LED_data_1, LOW);
+
+    if(saved_answer[question_num-1][1])
+        digitalWrite(LED_data_2, HIGH);
+    else
+        digitalWrite(LED_data_2, LOW);
+
+    if(saved_answer[question_num-1][2])
+        digitalWrite(LED_data_3, HIGH);
+    else 
+        digitalWrite(LED_data_3, LOW);
+
+    if(active)
+        digitalWrite(LED_data_4, HIGH);
+    else
+        digitalWrite(LED_data_4, LOW);
+}
+
+void setQuestion(int question_num, int old_question_num, bool saved_answer[5][3]){
     switch (question_num)
     {
     case 1:
-        digitalWrite(question_1, HIGH);
+        setLedBus(old_question_num, false, saved_answer);
+        updateQuestion(old_question_num);
         digitalWrite(question_2, LOW);
         digitalWrite(question_3, LOW);
         digitalWrite(question_4, LOW);
         digitalWrite(question_5, LOW);
-
-        digitalWrite(LED_data_4, LOW);
-        updateAllQuestion();
-
-        digitalWrite(LED_data_4, HIGH);
+        
+        setLedBus(question_num, true, saved_answer);
+        digitalWrite(question_1, HIGH);
         updateQuestion(question_num);
         break;
     case 2:
+        setLedBus(old_question_num, false, saved_answer);
+        updateQuestion(old_question_num);
         digitalWrite(question_1, LOW);
-        digitalWrite(question_2, HIGH);
         digitalWrite(question_3, LOW);
         digitalWrite(question_4, LOW);
         digitalWrite(question_5, LOW);
-
-        digitalWrite(LED_data_4, LOW);
-        updateAllQuestion();
-
-        digitalWrite(LED_data_4, HIGH);
+        
+        setLedBus(question_num, true, saved_answer);
+        digitalWrite(question_2, HIGH);
         updateQuestion(question_num);
         break;
     case 3:
+        setLedBus(old_question_num, false, saved_answer);
+        updateQuestion(old_question_num);
         digitalWrite(question_1, LOW);
         digitalWrite(question_2, LOW);
-        digitalWrite(question_3, HIGH);
         digitalWrite(question_4, LOW);
         digitalWrite(question_5, LOW);
-
-        digitalWrite(LED_data_4, LOW);
-        updateAllQuestion();
-
-        digitalWrite(LED_data_4, HIGH);
+        
+        setLedBus(question_num, true, saved_answer);
+        digitalWrite(question_3, HIGH);
         updateQuestion(question_num);
         break;
     case 4:
+        setLedBus(old_question_num, false, saved_answer);
+        updateQuestion(old_question_num);
         digitalWrite(question_1, LOW);
         digitalWrite(question_2, LOW);
         digitalWrite(question_3, LOW);
-        digitalWrite(question_4, HIGH);
         digitalWrite(question_5, LOW);
-
-        digitalWrite(LED_data_4, LOW);
-        updateAllQuestion();
-
-        digitalWrite(LED_data_4, HIGH);
+        
+        setLedBus(question_num, true, saved_answer);
+        digitalWrite(question_4, HIGH);
         updateQuestion(question_num);
         break;
     case 5:
+        setLedBus(old_question_num, false, saved_answer);
+        updateQuestion(old_question_num);
         digitalWrite(question_1, LOW);
         digitalWrite(question_2, LOW);
         digitalWrite(question_3, LOW);
         digitalWrite(question_4, LOW);
+        
+        setLedBus(question_num, true, saved_answer);
         digitalWrite(question_5, HIGH);
-
-        digitalWrite(LED_data_4, LOW);
-        updateAllQuestion();
-
-        digitalWrite(LED_data_4, HIGH);
         updateQuestion(question_num);
         break;
     default:
@@ -210,32 +216,15 @@ void setQuestion(int question_num){
     }
 }
 
-void handleQuestion(int question_num){
-    switch (question_num)
-    {
-    case 1:
-        setQuestion(question_num);
-        Serial.println("Qest1");
-        break;
-    case 2:
-        setQuestion(question_num);
-        Serial.println("Qest2");
-        break;
-    case 3:
-        setQuestion(question_num);
-        Serial.println("Qest3");
-        break;
-    case 4:
-        setQuestion(question_num);
-        Serial.println("Qest4");
-        break;
-    case 5:
-        setQuestion(question_num);
-        Serial.println("Qest5");
-        break;
-    default:
-        break;
+int getScore(bool saved_answer[5][3], bool answer[5][3]){
+    int score = 0;
+
+    for (int i = 0; i < 5; i++){
+        if(saved_answer[i][0] == answer[i][0] && saved_answer[i][1] == answer[i][1] && saved_answer[i][2] == answer[i][2]){
+            score++;
+        }
     }
+    return score;
 }
 
 void ledTest(){
