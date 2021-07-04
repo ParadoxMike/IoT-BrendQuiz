@@ -124,6 +124,13 @@ void loop(){
     }
 
     if(millis()-counter_sleep > 40000){
-        esp_deep_sleep_start();
+            lcd.noBacklight();
+            lcd.noDisplay();
+            digitalWrite(LED_data_1, LOW);
+            digitalWrite(LED_data_2, LOW);
+            digitalWrite(LED_data_3, LOW);
+            digitalWrite(LED_data_4, LOW);
+            updateAllQuestion();
+            esp_deep_sleep_start();
     }
 }
