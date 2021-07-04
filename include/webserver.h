@@ -28,7 +28,7 @@ void setupWebserver(){
 
     // Route for root / web page
     server.on("/", HTTP_GET, [](AsyncWebServerRequest *request){
-    request->send(SPIFFS, "/brend_quiz_map.pdf", "application/pdf");
+    request->send(SPIFFS, "/brend_quiz.pdf", "application/pdf");
     });
     // Start server
     server.begin();

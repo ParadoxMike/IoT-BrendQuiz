@@ -3,7 +3,7 @@
 int question = 1;
 int question_brfore = 1;
 bool question_state[5][3] = {{false, false, false}, {false, false, false}, {false, false, false}, {false, false, false}, {false, false, false}};
-bool answers[5][3] = {{true, false, false}, {true, false, false}, {true, false, false}, {true, false, false}, {true, false, false}};
+bool answers[5][3] = {{true, false, false}, {false, false, true}, {false, true, false}, {true, false, false}, {false, false, true}};
 unsigned long counter;
 bool finish_press = 0;
 
@@ -115,15 +115,4 @@ void loop(){
         if(question > 1 && question < 6)
             question--;
     }
-
-    // for (int i = 1; i < 6; i++){
-    //     handleQuestion(i);
-    //     delay(1000);
-
-    //     if(i % 2 == 0)
-    //         lcd.noBacklight();
-    //     else
-    //         lcd.backlight();
-    // }
-
 }
