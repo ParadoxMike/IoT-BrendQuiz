@@ -5,6 +5,7 @@ int question_brfore = 1;
 bool question_state[5][3] = {{false, false, false}, {false, false, false}, {false, false, false}, {false, false, false}, {false, false, false}};
 bool answers[5][3] = {{true, false, false}, {false, false, true}, {false, true, false}, {true, false, false}, {false, false, true}};
 unsigned long counter;
+unsigned long counter_sleep;
 bool finish_press = 0;
 
 #include "webserver.h"
@@ -22,6 +23,7 @@ void setup(){
 
     ledTest();
     delay(250);
+    counter_sleep = millis();
 }
 
 void loop(){
@@ -32,16 +34,19 @@ void loop(){
         question_state[question-1][0] = true;
         question_state[question-1][1] = false;
         question_state[question-1][2] = false;
+        counter_sleep = millis();
     }
     if(analogRead(button_pin_B) >= adc_on_level){
         question_state[question-1][0] = false;
         question_state[question-1][1] = true;
         question_state[question-1][2] = false;
+        counter_sleep = millis();
     }
     if(analogRead(button_pin_C) >= adc_on_level){
         question_state[question-1][0] = false;
         question_state[question-1][1] = false;
         question_state[question-1][2] = true;
+        counter_sleep = millis();
     }
     
     lcd.setCursor(0,0);
@@ -83,6 +88,7 @@ void loop(){
     question_brfore = question;
     startNextButton.update();
     if(startNextButton.rose()){ //check for "next" button to be presset and increment qestion
+        counter_sleep = millis();
 
         if(question < 5){
             question++;
@@ -111,8 +117,13 @@ void loop(){
 
     previousButton.update();
     if(previousButton.rose()){ //check for "prev" button to be presset and decrement qestion
+        counter_sleep = millis();
 
         if(question > 1 && question < 6)
             question--;
+    }
+
+    if(millis()-counter_sleep > 40000){
+        esp_deep_sleep_start();
     }
 }
