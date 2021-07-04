@@ -18,6 +18,7 @@ void setup(){
     setupWebserver();
     setupPins();
     setupLCD();
+    esp_sleep_enable_ext0_wakeup(GPIO_NUM_25,1);
 
     ledTest();
     delay(250);
@@ -92,6 +93,16 @@ void loop(){
         }
         else if(question==5 && finish_press && millis()-counter <= 1000){
             question = 6;
+        }
+        else if(question==6){
+            lcd.noBacklight();
+            lcd.noDisplay();
+            digitalWrite(LED_data_1, LOW);
+            digitalWrite(LED_data_2, LOW);
+            digitalWrite(LED_data_3, LOW);
+            digitalWrite(LED_data_4, LOW);
+            updateAllQuestion();
+            esp_deep_sleep_start();
         }
     }
     if(question==5 && finish_press && millis()-counter > 1000) { //reset if not pressed in time a second time
