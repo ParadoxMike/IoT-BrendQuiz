@@ -1,4 +1,6 @@
-#include <Arduino.h>
+//A programm for the module "The Fundamentals of IoT" at Furtwangen University
+//written my Mike Blank OMB in C for an ESP 32 DevKit
+
 //globals
 int question = 1;
 int question_brfore = 1;
@@ -7,6 +9,8 @@ bool answers[5][3] = {{true, false, false}, {false, false, true}, {false, true, 
 unsigned long counter;
 unsigned long counter_sleep;
 bool finish_press = 0;
+
+#include <Arduino.h>
 
 #include "webserver.h"
 #include "pins.h"
