@@ -1,5 +1,8 @@
+//here are all the helper functions
+
 #include <Arduino.h>
 
+//update the current D-FlipFlop/Question to whats on the LED bus
 void updateQuestion(int question_num){
     switch (question_num)
     {
@@ -58,6 +61,7 @@ void updateQuestion(int question_num){
     }
 }
 
+//update all D-FlipFlops / questions to whats on the led bus
 void updateAllQuestion(){
     int akt_question = 0;
 
@@ -126,6 +130,7 @@ void updateAllQuestion(){
     }
 }
 
+//set the 4 outputs of the "LED bus"
 void setLedBus(int question_num, bool active, bool saved_answer[5][3]){
     if(saved_answer[question_num-1][0])
         digitalWrite(LED_data_1, HIGH);
@@ -148,6 +153,7 @@ void setLedBus(int question_num, bool active, bool saved_answer[5][3]){
         digitalWrite(LED_data_4, LOW);
 }
 
+//set the passed question number to active and load the saved answers
 void setQuestion(int question_num, int old_question_num, bool saved_answer[5][3]){
     switch (question_num)
     {
@@ -216,6 +222,7 @@ void setQuestion(int question_num, int old_question_num, bool saved_answer[5][3]
     }
 }
 
+//return the achieved score out of 5 as an int
 int getScore(bool saved_answer[5][3], bool answer[5][3]){
     int score = 0;
 
@@ -227,6 +234,7 @@ int getScore(bool saved_answer[5][3], bool answer[5][3]){
     return score;
 }
 
+//test all leds
 void ledTest(){
     digitalWrite(LED_data_1, HIGH);
     digitalWrite(LED_data_2, HIGH);

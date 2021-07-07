@@ -1,17 +1,25 @@
 //A programm for the module "The Fundamentals of IoT" at Furtwangen University
 //written my Mike Blank OMB in C for an ESP 32 DevKit
+// utilized libs (used versions included in /lib):
+// AsyncTCP - https://github.com/me-no-dev/AsyncTCP
+// Bounce2 - https://github.com/thomasfredericks/Bounce2
+// ESPAsyncWebServer - https://github.com/me-no-dev/ESPAsyncWebServer
+// LiquidCrystal_I2C - https://github.com/johnrickman/LiquidCrystal_I2C
 
-//globals
-int question = 1;
-int question_brfore = 1;
-bool question_state[5][3] = {{false, false, false}, {false, false, false}, {false, false, false}, {false, false, false}, {false, false, false}};
-bool answers[5][3] = {{true, false, false}, {false, false, true}, {false, true, false}, {true, false, false}, {false, false, true}};
-unsigned long counter;
-unsigned long counter_sleep;
-bool finish_press = 0;
+//helper functions, pin setup, WiFi webserver and lcd setup are located in seperate headder files (/include)
+
+//define global veriables
+int question = 1; //safe current question
+int question_brfore = 1; //safe last question
+bool question_state[5][3] = {{false, false, false}, {false, false, false}, {false, false, false}, {false, false, false}, {false, false, false}}; //safe current state of every awnser given by the user
+bool answers[5][3] = {{true, false, false}, {false, false, true}, {false, true, false}, {true, false, false}, {false, false, true}}; //safe the answerkey
+unsigned long counter; //safe te value of millis() to give the user 1 sec. to double press to confirm awnsers
+bool finish_press = 0; //safe if continiue as been pressed already for the doubble press
+unsigned long counter_sleep; //safe te value of millis() to send the esp tp sleep afer 40 sec. without any interaction.
 
 #include <Arduino.h>
 
+// include helper stuff and other code
 #include "webserver.h"
 #include "pins.h"
 #include "functions.h"
@@ -20,20 +28,22 @@ bool finish_press = 0;
 void setup(){
     Serial.begin(115200); //Start Serial-Monitor for debugging
 
+    //call setup funcions of webserver.h, pins.h and lcd.h
     setupWebserver();
     setupPins();
     setupLCD();
+
+    //setup sleep wakeup on the back button
     esp_sleep_enable_ext0_wakeup(GPIO_NUM_25,1);
 
-    ledTest();
-    delay(250);
-    counter_sleep = millis();
+    ledTest(); //test all leds
+    counter_sleep = millis(); //initiallize the counter for esp sleep 
 }
 
 void loop(){
-    //handle all stuff to do with a question
     setQuestion(question, question_brfore, question_state);
 
+    //safe the qestion state according to the button pressed and reset sleep counter
     if(analogRead(button_pin_A) >= adc_on_level){
         question_state[question-1][0] = true;
         question_state[question-1][1] = false;
@@ -53,7 +63,8 @@ void loop(){
         counter_sleep = millis();
     }
     
-    lcd.setCursor(0,0);
+    //handle the lcd and other stuff according to witch question is active
+    lcd.setCursor(0,0); 
     switch (question)
     {
     case 1:
@@ -90,6 +101,8 @@ void loop(){
     }
 
     question_brfore = question;
+
+    //handle next being pressed
     startNextButton.update();
     if(startNextButton.rose()){ //check for "next" button to be presset and increment qestion
         counter_sleep = millis();
@@ -119,6 +132,7 @@ void loop(){
         finish_press = 0;
     }
 
+    //handle previous being pressed
     previousButton.update();
     if(previousButton.rose()){ //check for "prev" button to be presset and decrement qestion
         counter_sleep = millis();
@@ -127,6 +141,7 @@ void loop(){
             question--;
     }
 
+    //send esp to sleep aver 40sec. without interaction
     if(millis()-counter_sleep > 40000){
             lcd.noBacklight();
             lcd.noDisplay();

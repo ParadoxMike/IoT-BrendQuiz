@@ -1,3 +1,5 @@
+//here is everything pin setup related
+
 #include <Arduino.h>
 #include <Bounce2.h>
 
